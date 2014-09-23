@@ -4,10 +4,11 @@ var edge = require('edge');
 
 
 
-//"$(Get-adcomputer -filter 'Name -like *' | convertTo-json)"
+//"$(Get-adcomputer -filter 'Name -like ""$inputFromJS""' -properties Name,OperatingSystem, OperatingSystemVersion | select-object -property Name,OperatingSystem,OperatingSystemVersion | convertTo-json)"
+
 
 var ps_pcliste = edge.func('ps', function () {/*
-"$(Get-alias | convertTo-json)"
+"$(Get-adcomputer -filter ""Name -like '$inputFromJS'"" -properties Name,OperatingSystem, OperatingSystemVersion | select-object -property Name,OperatingSystem,OperatingSystemVersion | convertTo-json)"
 */});
 
 router.get('/', function(req, res) {
@@ -15,10 +16,10 @@ router.get('/', function(req, res) {
 });
 
 router.get('/cmd/', function (req, res) {
-  //console.log(req)
-  ps_pcliste(req.query.search+"*", function (error, result) {
+  //console.log(req.query.search)
+  ps_pcliste(req.query.search, function (error, result) {
     if (error) throw error;
-    console.log(result[0]);
+    //console.log(result[0]);
     res.send(result[0]);
   });
 });
